@@ -13,7 +13,7 @@ function DropdownMenu({ dropWidth, dropMenu, dropImg }: PropsType) {
       className="hidden absolute w-screen py-5 bg-white group-hover:flex top-[57px] justify-center"
       style={{ left: `calc(-${dropWidth}px)` }}
     >
-      <ul className="font-normal mr-[200px]">
+      <ul className="font-normal mr-[200px] flex flex-col flex-wrap h-64">
         {/* 이 요소는 첫번째 드랍 메뉴에서만 필요한 것 */}
         {/* 좋지않은 방법이지만 이 것 하나만이 예외이므로 이렇게라도 처리하자... */}
         {dropMenu[0].where === "도쿄" ? (
@@ -21,7 +21,7 @@ function DropdownMenu({ dropWidth, dropMenu, dropImg }: PropsType) {
         ) : null}
 
         {dropMenu.map((item, index) => (
-          <li key={index} className="pb-2">
+          <li key={index} className="pb-2 mr-8">
             <a
               href={item.whereLink}
               className="hover:text-red-400 hover:cursor-pointer"
