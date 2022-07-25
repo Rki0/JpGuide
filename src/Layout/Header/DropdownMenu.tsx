@@ -1,4 +1,3 @@
-// import type { DropMenuProps, DropImgProps } from "./HeaderNav";
 import type { DropMenuProps, DropImgProps } from "./Interface";
 
 interface PropsType {
@@ -35,12 +34,15 @@ function DropdownMenu({ dropWidth, dropMenu, dropImg }: PropsType) {
       <div className="grid grid-cols-2 w-[calc((192px+4px)*2)]">
         {dropImg.map((item, index) => (
           <div className="p-2" key={index}>
-            <a href={item.imgHref} className="hover:cursor-pointer">
+            <a href={item.imgHref} className="relative hover:cursor-pointer">
               <img
                 src={item.img}
                 alt="beautiful"
                 className="block w-[192px] rounded"
               />
+              <span className="absolute text-white bottom-2 left-2">
+                {item.imgDesc}
+              </span>
             </a>
           </div>
         ))}

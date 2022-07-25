@@ -8,6 +8,7 @@ export interface DropMenuProps {
 export interface DropImgProps {
   img: string;
   imgHref: string;
+  imgDesc: string;
 }
 
 // HeaderNav 메뉴 타입 정의
@@ -50,18 +51,22 @@ export const NavMenu: NavMenuProps[] = [
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1513913417/yamagata/Yamagata502_1",
         imgHref: "https://www.japan.travel/ko/spot/1798/",
+        imgDesc: "긴잔온천",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1514196022/nagano/Nagano106_2",
         imgHref: "https://www.japan.travel/ko/spot/1344/",
+        imgDesc: "지고쿠다니야생원숭이...",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1515928270/hokkaido/Hokkaido1463_13",
         imgHref: "https://www.japan.travel/ko/spot/1884/",
+        imgDesc: "후라노스키장",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1517338660/tochigi/Tochigi982_21",
         imgHref: "https://www.japan.travel/ko/spot/1477/",
+        imgDesc: "유니시가와카마쿠리축제",
       },
     ],
   },
@@ -140,21 +145,25 @@ export const NavMenu: NavMenuProps[] = [
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1513934466/tokyo/Tokyo2249_16",
         imgHref: "https://www.japan.travel/ko/spot/1727/",
+        imgDesc: "고쿄",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1517193604/okinawa/Okinawa1985_9",
         imgHref:
           "https://www.japan.travel/ko/destinations/okinawa/okinawa/the-kerama-islands/",
+        imgDesc: "게라마의 섬들",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1514372576/kyoto/Kyoto1051_5",
         imgHref:
           "https://www.japan.travel/ko/destinations/kansai/kyoto/gion-and-higashiyama/",
+        imgDesc: "기온 & 히가시야마",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1514195354/nagano/Nagano2474_15",
         imgHref:
           "https://www.japan.travel/ko/destinations/hokuriku-shinetsu/nagano/hakuba/",
+        imgDesc: "하쿠바",
       },
     ],
   },
@@ -199,19 +208,23 @@ export const NavMenu: NavMenuProps[] = [
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1517144164/static/Nagano117_3",
         imgHref: "https://www.japan.travel/ko/plan/online-reservation-sites/",
+        imgDesc: "호텔 & 료칸 검색",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1524473274/other/img_restaurant_search01",
         imgHref: "https://dining.japan.travel/ko/restaurant",
+        imgDesc: "레스토랑 검색",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1/media/filer_public/c1/ef/c1efe731-88d0-4667-9dae-dcba59ad6f27/img_covid_top_agalhe",
         imgHref:
           "https://www.japan.travel/ko/practical-coronavirus-information/",
+        imgDesc: "코로나19: 달라진 일...",
       },
       {
         img: "https://res.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,fl_lossy,f_auto/v1517144190/static/pixta_24426523.jpg",
         imgHref: "https://www.japan.travel/ko/weather/",
+        imgDesc: "일기 예보",
       },
     ],
   },
@@ -240,6 +253,7 @@ export const NavMenu: NavMenuProps[] = [
       {
         img: "https://wallpaperaccess.com/full/3025468.jpg",
         imgHref: "https://wallpaperaccess.com/white-screen",
+        imgDesc: "White",
       },
     ],
   },
