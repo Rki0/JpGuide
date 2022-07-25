@@ -1,10 +1,10 @@
-import React from "react";
 import Layout from "../../Layout/Layout";
+import AutoSlide from "./AutoSlide";
 
 function LandingPage() {
   return (
     <Layout>
-      <div>자동 슬라이드 컴포넌트</div>
+      <AutoSlide />
       <div>중요 공지</div>
       <div>여행 하이라이트 컴포넌트</div>
       <div>인기 장소 컴포넌트</div>
