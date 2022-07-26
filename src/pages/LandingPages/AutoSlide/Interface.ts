@@ -1,9 +1,11 @@
+// 슬라이드에 들어가는 요소들의 타입 선언
 export interface SlideProps {
   img: string;
   imgTitle: string;
   imgDesc: string;
 }
 
+// 슬라이드에 들어갈 요소들
 export const slideArr: SlideProps[] = [
   {
     img: "https://res.cloudinary.com/jnto/image/upload/w_1640,h_1050,c_fill,f_auto,fl_lossy,q_auto/v1/media/filer_public/f9/45/f9459f0d-3215-4f92-b02d-b1ae6062ac42/barrierfree_manvisual_20211227-04_jrkevq",
@@ -46,3 +48,15 @@ export const slideArr: SlideProps[] = [
     imgDesc: "Welcome to the official tourism website of Japan",
   },
 ];
+
+// 슬라이드 버튼에 사용될 요소들의 타입 선언
+export interface DirectionBtnType {
+  direction: string;
+  onClick: () => void;
+}
+
+// 페이지네이션 버튼에 사용될 요소의 타입 선언
+export interface PagenationBtnType {
+  slideIndex: number;
+  setSlideIndex: React.Dispatch<React.SetStateAction<number>>;
+}

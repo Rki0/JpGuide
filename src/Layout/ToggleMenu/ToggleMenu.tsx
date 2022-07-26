@@ -46,7 +46,7 @@ function ToggleMenu({ menuHandler }: PropsType) {
   };
 
   return (
-    <div className="absolute top-0 z-10 flex w-screen h-screen">
+    <div className="absolute top-0 z-50 flex w-screen h-screen">
       <nav className="relative w-4/5 h-full overflow-scroll bg-white">
         {/* 각각의 메뉴에 대하여 어떤게 클릭되었는지에 따라 출력되는 것이 다르므로, 하나의 state로 처리하기가 곤란함 */}
         {/* 따라서 각각의 메뉴를 전부 다른 state로 설정하고 setState를 진행함 */}

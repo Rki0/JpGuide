@@ -7,6 +7,7 @@ import { ReactComponent as Logo } from "../../assets/images/logo.svg";
 import HeaderNav from "./HeaderNav";
 import RightMenu from "./RightMenu";
 import ToggleSearchBar from "./ToggleSearchBar";
+import ToggleMenu from "../ToggleMenu/ToggleMenu";
 
 // state, setState가 여러 군데로 전달되고 있기 때문에 각각의 컴포넌트에서 interface를 작성하기 보다는
 // 시작되는 부분에서 작성해놓고 export를 해버리자. 필요한 곳에서 import해서 사용하면 된다.
@@ -19,11 +20,7 @@ import ToggleSearchBar from "./ToggleSearchBar";
 //   searchHandler: () => void;
 // }
 
-interface PropsType {
-  menuHandler: () => void;
-}
-
-function Header({ menuHandler }: PropsType) {
+function Header() {
   const [searchInput, setSearchInput] = useState("");
   const [toggleSearch, setToggleSearch] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -49,8 +46,17 @@ function Header({ menuHandler }: PropsType) {
     };
   }, []);
 
+  // 모바일 화면에서 숨겨져 있는 메뉴를 보여주기 위한 state
+  const [toggleMenu, setToggleMenu] = useState(false);
+
+  const menuHandler = () => {
+    setToggleMenu((prev) => !prev);
+  };
+
   return (
-    <header className="fixed top-0 w-full bg-white border-b-[1px] border-red-100">
+    <header className="fixed top-0 w-full bg-white border-b-[1px] border-red-100 z-50">
+      {toggleMenu ? <ToggleMenu menuHandler={menuHandler} /> : null}
+
       <div className="flex items-center justify-between p-2 py-0">
         <div className="hover:text-red-400 lg:hidden" onClick={menuHandler}>
           <GiHamburgerMenu size="20px" />
