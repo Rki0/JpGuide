@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { slideArr } from "./Interface";
 import SlideBtn from "./SlideBtn";
-import Pagenation from "./Pagenation";
+import Pagination from "./Pagination";
 
 interface IUseInterval {
   (callback: () => void, interval: number): void;
@@ -38,6 +38,7 @@ function AutoSlide() {
   // 무한 슬라이드를 구현하기 위해서 slideArr 앞 뒤에 요소를 추가했기 때문에, 1번 인덱스가 첫번째 슬라이드가 됨.
   const [slideIndex, setSlideIndex] = useState(1);
 
+  const outRef = useRef<HTMLDivElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
 
   const SLIDE_NUM = slideArr.length;
@@ -86,20 +87,43 @@ function AutoSlide() {
     }, 0);
   }
 
-  // 1 -> 0이 되었을 때 동작할 부분.
-  // 뒤로 가는 버튼을 눌러도 무한 슬라이드 가능
+  // 클릭으로 인해서 1 -> 0이 되었을 때 동작할 부분.
+  // 9 -> 10이 되었을 때와 똑같은 작동 방식.
+  // 즉, slideIndex가 customInterval을 조정해줘야함
+  // 안됨!!!! customInterval은 증가하는 방향으로만 작동하기 때문에 뒤로 가는 효과랑은 어울리지 않음.
+  // 슬라이드 방향을 탐지해서 뒤로 가기 할 때만 다른 것을 적용하도록 해야할 것 같은데?
+  // 문제 원인
+  // slideIndex는 1에서 0으로 즉각 떨어지는 반면 나머지 효과들은 시간차가 발생하기 때문에
+  // 무한 슬라이드 효과가 아니라 끝에서 끝으로 주르륵 이동해버리는 상황이 발생함.
   if (slideIndex === 0) {
-    if (slideRef.current) {
-      slideRef.current.style.transition = "";
-    }
+    // 과정 정리
+    // 1. 뒤로 가기 버튼 누름
+    // 2. slideIndex가 1에서 0으로 바뀜
+    // 3. transition 효과를 가지고 이동. 500ms 소요
+    // 여기부터 if문 동작
+    // 4. 이동 완료 후 transition 효과 삭제
+    // 5. slideIndex를 8로 옮김
+    // 6. 다시 transition 효과 복구
 
-    setSlideIndex(9);
-
+    // transition 효과가 500ms duration이므로, 500ms 이후에 if문 동작 실행하게 setTimeout 설정
     setTimeout(() => {
       if (slideRef.current) {
-        slideRef.current.style.transition = "all 500ms ease-in-out";
+        slideRef.current.style.transition = "";
       }
-    }, 0);
+
+      // transition 효과가 없는 상태에서 오리지널 last로 이동
+      setSlideIndex(8);
+
+      // 다시 transition 효과 복구
+      // 단, 비동기 실행을 하지 않으면, transition 삭제가 바로 복구되므로
+      // 비동기 처리를 해서 안정적으로 작동하게 만들자.
+      // setTimeout은 time을 0으로 설정해도 비동기 처리됨.
+      setTimeout(() => {
+        if (slideRef.current) {
+          slideRef.current.style.transition = "all 500ms ease-in-out";
+        }
+      }, 0);
+    }, 500);
   }
 
   // 슬라이드 버튼 클릭시 방향에 따라 슬라이드 인덱스 조정
@@ -113,18 +137,23 @@ function AutoSlide() {
     setCustomInterval(10000);
   };
 
-  // mouseLeave 이벤트 발생 시 customInterval을 3000으로 복구시킴.
+  // mouseLeave 이벤트 발생 시 customInterval을 원래대로 복구시킴.
   const restartSlide = () => {
-    setCustomInterval(3000);
+    if (slideIndex === 9) {
+      setCustomInterval(500);
+    } else {
+      setCustomInterval(3000);
+    }
   };
 
+  // 슬라이드 버튼과 페이지네이션에 mouseover 상태여도 작동하도록 가장 바깥 div에 ref를 설정해서 addEventListener 실행
   useEffect(() => {
-    slideRef.current?.addEventListener("mouseover", stopSlide);
-    slideRef.current?.addEventListener("mouseleave", restartSlide);
+    outRef.current?.addEventListener("mouseover", stopSlide);
+    outRef.current?.addEventListener("mouseleave", restartSlide);
 
     return () => {
-      slideRef.current?.removeEventListener("mouseover", stopSlide);
-      slideRef.current?.removeEventListener("mouseleave", restartSlide);
+      outRef.current?.removeEventListener("mouseover", stopSlide);
+      outRef.current?.removeEventListener("mouseleave", restartSlide);
     };
   }, [custominterval]);
 
@@ -144,16 +173,11 @@ function AutoSlide() {
     }
   }, [slideIndex]);
 
-  /////////////
-  // 추가로 구현해야할 것
-  // 2. 버튼과 페이지네이션의 경우 slideRef의 형제 요소이기 때문에 마우스 이벤트에서 자유로운데
-  // 여기까지 포함하려면 가장 바깥 div에 ref를 걸어야할 것 같다. 이 부분을 고민해보자
-
   return (
-    <div className="relative overflow-hidden z-[1] group">
+    <div className="relative overflow-hidden z-[1] group" ref={outRef}>
       <SlideBtn direction="left" onClick={() => slideHandler(-1)} />
       <SlideBtn direction="right" onClick={() => slideHandler(1)} />
-      <Pagenation setSlideIndex={setSlideIndex} slideIndex={slideIndex} />
+      <Pagination setSlideIndex={setSlideIndex} slideIndex={slideIndex} />
       <div
         className="flex"
         ref={slideRef}

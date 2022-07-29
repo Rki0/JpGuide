@@ -56,7 +56,7 @@ export interface DirectionBtnType {
 }
 
 // 페이지네이션 버튼에 사용될 요소의 타입 선언
-export interface PagenationBtnType {
+export interface PaginationBtnType {
   slideIndex: number;
   setSlideIndex: React.Dispatch<React.SetStateAction<number>>;
 }
