@@ -11,18 +11,6 @@ function HeaderNav() {
   // 원래는 useState는 타입이 자동 지정되므로, 별도로 명시하지않아도 되지만, num 변수가 undefined가 될 수도 있기 때문에 undefined까지 포함하는 것으로 타입 정의
   const [dropWidth, setDropWidth] = useState<number | undefined>(0);
 
-  // 굳이 안해줘도 큰 문제는 없기 때문에 생략!
-  // // 첫 렌더링 시 헤더 nav drop1의 left 좌표 값
-  // let firstLeft = drop1.current?.getBoundingClientRect().left;
-
-  // // firstLeft를 dropWidth로 설정
-  // // mouseover를 하기 전에 미리 변수를 가지기 위함
-  // useEffect(() => {
-  //   setDropWidth(firstLeft);
-
-  //   console.log("first", dropWidth);
-  // }, [dropWidth]);
-
   const checkDropWidth = () => {
     // getBoundingClientRect().left를 바로 setState하니까 undefined가 나오므로
     // 다른 변수에 저장해서 사용하는 방식을 채택.

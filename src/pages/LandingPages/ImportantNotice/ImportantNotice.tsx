@@ -10,6 +10,7 @@ function ImportantNotice() {
           <a
             href={item.href}
             className="flex hover:text-red-500 py-[2vw] w-100 md:w-1/3 border-b-2 md:px-2"
+            key={index}
           >
             <div className="flex flex-col w-2/3 font-bold">
               <h2>

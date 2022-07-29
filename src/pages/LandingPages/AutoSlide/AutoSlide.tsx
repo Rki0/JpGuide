@@ -7,7 +7,6 @@ interface IUseInterval {
   (callback: () => void, interval: number): void;
 }
 
-// setInterval 기능을 Typescript + React로 구현해놓은 커스텀 Hooks
 const useInterval: IUseInterval = (callback, interval) => {
   const savedCallback = useRef<(() => void) | null>(null);
 
@@ -22,8 +21,15 @@ const useInterval: IUseInterval = (callback, interval) => {
       }
     }
 
-    let id = setInterval(tick, interval);
-    return () => clearInterval(id);
+    // 만약 customInterval에 10000(10초)를 넣었을 때, setInterval을 설정하지 않는다면
+    // 슬라이드의 인덱스가 증가하는 동작이 멈추게 되므로,
+    // 이를 마우스 오버와 결합 시키면, 슬라이드 정지를 구현할 수 있지않을까?
+    // 마우스 오버시 setCustomInterval를 10000로 설정하고, 그 customInterval를 interval 인자로 받아오므로
+    // 여기서 if문 처리를 해주는 거지!
+    if (interval !== 10000) {
+      let id = setInterval(tick, interval);
+      return () => clearInterval(id);
+    }
   }, [interval]);
 };
 
@@ -44,29 +50,13 @@ function AutoSlide() {
 
   const COPIED_NUM = copiedArr.length;
 
-  // 이 방법을 쓰면 안되는 이유
-  // -12.5%만 이동하기 때문. 한번 클래스를 추가해서 이동한 뒤에 -12.5%를 아무리 translate 해도 그 자리에 멈춰있는다.
-  // ref를 걸어놓은 것의 12.5%인 부분에 이미 가 있기 때문에 변화가 없는 것. 즉, 이미지의 인덱스 번호 등을 활용해서 translate할 거리를 거기에 맞춰 늘려나가야함.
-  // const slideStart = () => {
-  //   // Tailwind를 사용하고 있으므로 클래스 명을 추가해줘야 스타일이 바뀜.
-  //   // 100%를 translate하면 800vw가 이동하므로 100/8 = 12.5%를 움직여야지 하나의 이미지만 이동됨.
-  //   slideRef.current?.classList.add("translate-x-[-12.5%]");
-  // };
-  //
-  // useEffect(() => {
-  //   slideStart();
-  // }, [slideIndex]);
+  // 처음 페이지가 랜더링 되었을 때, customInterval은 3000
+  const [custominterval, setCustomInterval] = useState(3000);
 
-  // useInterval()에 사용하는 interval을 인덱스 번호에 따라 조절함으로써 UX를 키워줌.
-  // 무한 슬라이드의 핵심 부분인 마지막 슬라이드와 복제된 첫 번째 슬라이드 때문에
-  // 그 때의 interval을 transition의 duration과 같게 해줘야한다. 그래야 무한 슬라이드가 매끄러움.
-  // last 뒤에 있는 복제된 first의 인덱스가 9이므로, 9 -> 10이 되는 것을 다른 때보다 빠르게 진행시켜서 시각적으로 슬라이드가 계속되는 것 처럼 보이게 함.
-  let interval: number = 3000;
-  if (slideIndex === 9) {
-    interval = 500;
-  } else {
-    interval = 3000;
-  }
+  useInterval(
+    () => setSlideIndex((slideIndex) => slideIndex + 1),
+    custominterval
+  );
 
   // 무한 슬라이드(왼쪽으로만 가는)
   // 1. last,first,...,last,first 식으로 배열을 만듦
@@ -96,16 +86,68 @@ function AutoSlide() {
     }, 0);
   }
 
-  useInterval(() => setSlideIndex((slideIndex) => slideIndex + 1), interval);
+  // 1 -> 0이 되었을 때 동작할 부분.
+  // 뒤로 가는 버튼을 눌러도 무한 슬라이드 가능
+  if (slideIndex === 0) {
+    if (slideRef.current) {
+      slideRef.current.style.transition = "";
+    }
+
+    setSlideIndex(9);
+
+    setTimeout(() => {
+      if (slideRef.current) {
+        slideRef.current.style.transition = "all 500ms ease-in-out";
+      }
+    }, 0);
+  }
 
   // 슬라이드 버튼 클릭시 방향에 따라 슬라이드 인덱스 조정
   const slideHandler = (direction: number) => {
     setSlideIndex((slideIndex) => slideIndex + direction);
   };
 
-  // 한번이라도 슬라이드 버튼 클릭시 무한 슬라이드에 영향이 감. 복제본과 오리지널 사이에서만.
-  // useInterval을 통해서 지속적으로 증가하고 있는 slideIndex를 강제적으로 변환했기 때문에 그런듯.
-  // 음....이 문제는 나타날 때도 있고, 안 나타날 때도 있다...일단 해결하는 걸 보류하자. 정확한 원인 파악이 안된다.
+  // mouseover 이벤트 발생 시 customInterval을 10000으로 바꿈.
+  // 이는 useInterval에서 조건문 처리가 되어, slideIndex 증가문을 실행하지 않게함.
+  const stopSlide = () => {
+    setCustomInterval(10000);
+  };
+
+  // mouseLeave 이벤트 발생 시 customInterval을 3000으로 복구시킴.
+  const restartSlide = () => {
+    setCustomInterval(3000);
+  };
+
+  useEffect(() => {
+    slideRef.current?.addEventListener("mouseover", stopSlide);
+    slideRef.current?.addEventListener("mouseleave", restartSlide);
+
+    return () => {
+      slideRef.current?.removeEventListener("mouseover", stopSlide);
+      slideRef.current?.removeEventListener("mouseleave", restartSlide);
+    };
+  }, [custominterval]);
+
+  // 재랜더링마다 slideIndex를 확인하고, 그게 9라면 customInterval을 500으로 설정한다.
+  // 만약 9가 아니라면, 3000을 설정한다.
+  // 이 설정 덕분에 마우스 이벤트로 인해서 슬라이가 멈췄다가 다시 진행될 때
+  // custominterval이 변해도 slideIndex를 확인해서 재설정이 가능함.
+  useEffect(() => {
+    // useInterval()에 사용하는 interval을 인덱스 번호에 따라 조절함으로써 UX를 키워줌.
+    // 무한 슬라이드의 핵심 부분인 마지막 슬라이드와 복제된 첫 번째 슬라이드 때문에
+    // 그 때의 interval을 transition의 duration과 같게 해줘야한다. 그래야 무한 슬라이드가 매끄러움.
+    // last 뒤에 있는 복제된 first의 인덱스가 9이므로, 9 -> 10이 되는 것을 다른 때보다 빠르게 진행시켜서 시각적으로 슬라이드가 계속되는 것 처럼 보이게 함.
+    if (slideIndex === 9) {
+      setCustomInterval(500);
+    } else {
+      setCustomInterval(3000);
+    }
+  }, [slideIndex]);
+
+  /////////////
+  // 추가로 구현해야할 것
+  // 2. 버튼과 페이지네이션의 경우 slideRef의 형제 요소이기 때문에 마우스 이벤트에서 자유로운데
+  // 여기까지 포함하려면 가장 바깥 div에 ref를 걸어야할 것 같다. 이 부분을 고민해보자
 
   return (
     <div className="relative overflow-hidden z-[1] group">

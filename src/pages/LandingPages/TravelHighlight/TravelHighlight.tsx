@@ -35,7 +35,7 @@ function TravelHighlight() {
           }}
         >
           {copiedArr.map((item, index) => (
-            <div className="mx-1">
+            <div className="mx-1" key={index}>
               <a
                 href={item.href}
                 className="relative flex items-center justify-center rounded"

@@ -27,7 +27,7 @@ function FamousPlace() {
 
             <div className="flex grid w-full grid-cols-2 gap-2 mb-1 md:w-1/2 md:mb-0">
               {item.images.smallImg.map((small, index) => (
-                <a href={small.href} className="">
+                <a href={small.href} key={index}>
                   <div className="relative h-auto">
                     <img
                       src={small.img}
