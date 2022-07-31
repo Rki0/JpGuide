@@ -11,7 +11,7 @@ function LandingPage() {
     <Layout>
       <AutoSlide />
       <ImportantNotice />
-      <TravelHighlight />
+      {/* <TravelHighlight /> */}
       <FamousPlace />
       <MonthlyWeb />
       <IconMenu />

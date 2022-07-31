@@ -66,3 +66,9 @@ export const hightlightArr: HightlightSlideType[] = [
     href: "https://www.japan.travel/ko/guide/december/",
   },
 ];
+
+// 슬라이드 버튼 props 타입
+export interface DirectionBtnType {
+  direction: string;
+  onClick: () => void;
+}
