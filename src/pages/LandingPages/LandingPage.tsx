@@ -7,6 +7,10 @@ import MonthlyWeb from "./MonthlyWeb/MonthlyWeb";
 import IconMenu from "./IconMenu/IconMenu";
 
 function LandingPage() {
+  // "start": "craco start",
+  // "build": "craco build",
+  // "test": "craco test",
+
   return (
     <Layout>
       <AutoSlide />
